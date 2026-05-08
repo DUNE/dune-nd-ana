@@ -1,4 +1,4 @@
-# dune-ndana
+# dune-nd-ana
 Near-Detector Analysis code for DUNE's Phlex-based software stack
 
 ## Copyright and Licensing
