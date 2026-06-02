@@ -160,7 +160,7 @@ Successfully saved display to: plots/spill_0_all_ixn0.png
 ## Related Files
 
 - `ndlar_caf_display_helpers.py` - Core helper module with data parsing and rendering logic
-- `ndlar_caf_display.ipynb` - Original Jupyter notebook with interactive examples
+- `ndlar_caf_display_copyMe.ipynb` - Jupyter notebook template with interactive examples
 
 ---
 
