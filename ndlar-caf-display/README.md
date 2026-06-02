@@ -1,4 +1,4 @@
-# DUNE ND-LAr CAF Event Display
+# DUNE ndlar-caf-display Event Display
 
 This repository provides an interactive 2D/3D event display for interactions within the **DUNE Near Detector Liquid Argon (ND-LAr)** Common Analysis Format (CAF) flat trees. It draws straight lines between the start and end positions of particle hypotheses, color-coded by particle type and overlaid with truth-level information for validation.
 
@@ -29,8 +29,8 @@ In the first cells, initialise your environment and point the script to your `.r
 import matplotlib.pyplot as plt
 import sys
 
-# Change below to match your path to NDLAr_CAF_event_display
-sys.path.append('/path/to/NDLAr_CAF_event_display/')
+# Change below to match your path to ndlar-caf-display
+sys.path.append('/path/to/ndlar-caf-display/')
 
 # Import everything explicitly from your helper file
 from ndlar_caf_display_helpers import load_interaction_spills, plot_interactions
