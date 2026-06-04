@@ -10,7 +10,6 @@ The heavy lifting (data parsing, truth-matching, and 3D projection rendering) is
 
 To use this event display, you will need the following Python modules:
 
-- `os`
 - `uproot`
 - `awkward`
 - `matplotlib`
