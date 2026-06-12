@@ -6,6 +6,40 @@ The heavy lifting (data parsing, truth-matching, and 3D projection rendering) is
 
 ---
 
+## Quick Start
+This code is now installable via pip:
+```
+pip install --extra-index-url https://test.pypi.org/simple/ ndlar-caf-display
+```
+and you can make event displays with the `ndlar-caf-display` executable.
+
+```
+[chknight@dunegpvm02 test]$ ndlar-caf-display --help
+usage: ndlar-caf-display [-h] [--spill SPILL] [--ixn IXN [IXN ...]] [--reco {dlp,pandora}] [--save-dir SAVE_DIR]
+                         [--skip-truth] [--apply-fv-cut] [--batch]
+                         caf_file
+
+Display interactions from a CAF file.
+
+positional arguments:
+  caf_file              Path to the CAF file to display.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --spill SPILL         Spill number to display (default: 0th spill).
+  --ixn IXN [IXN ...]   Interaction number(s) within the spill to display (default: 0th interaction).
+  --reco {dlp,pandora}  Reconstruction type to display: 'dlp' (spine) or 'pandora' (default: 'dlp').
+  --save-dir SAVE_DIR   Directory to save plots (default: 'plots').
+  --skip-truth          Whether to skip plotting truth information (default: False).
+  --apply-fv-cut        Whether to apply the fiducial volume cut (default: False).
+  --batch, -b           Whether to run in batch mode where the plots are not displayed interactively (default:
+                        False).
+```
+
+The rest of the documentation is left over from before the code was packaged up but may still be helpful to understand what the different options mean, or if you'd like to understand how the code works a bit more.
+
+---
+
 ## Prerequisites
 
 To use this event display, you will need the following Python modules:
