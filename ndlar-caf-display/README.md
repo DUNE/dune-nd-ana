@@ -2,6 +2,8 @@
 
 This package provides an interactive 2D/3D event display for interactions within the **DUNE Near Detector Liquid Argon (ND-LAr)** using Common Analysis Format (CAF) flat trees as input. It draws straight lines between the start and end positions of particle hypotheses, color-coded by particle type and overlaid with truth-level information for validation.
 
+![Example of an event display](example_display.png)
+
 The package can be installed with pip:
 ```
 pip install ndlar-caf-display
@@ -9,9 +11,9 @@ pip install ndlar-caf-display
 
 The primary way to generate an event display is with the `ndlar-caf-display` command which is a CLI that is included in the pip installation. Alternatively, you can import the `ndlar_caf_display.helpers` module in Python. 
 
-## The `ndlar-caf-display` command
+## Usage via `ndlar-caf-display` CLI
 
-The basic usage of this command is:
+The basic usage of the CLI is:
 ```
 ndlar-caf-display /path/to/CAF.flat.root
 ```
@@ -35,8 +37,7 @@ optional arguments:
   --save-dir SAVE_DIR   Directory to save plots (default: 'plots').
   --skip-truth          Whether to skip plotting truth information (default: False).
   --apply-fv-cut        Whether to apply the fiducial volume cut (default: False).
-  --batch, -b           Whether to run in batch mode where the plots are not displayed interactively (default:
-                        False).
+  --batch, -b           Whether to run in batch mode where the plots are not displayed interactively (default: False).
 ```
 
 If you are running `ndlar-caf-display` on a machine with `/pnfs/dune/persistent` available, e.g. the DUNE gpvm's, you can get started quickly with:
