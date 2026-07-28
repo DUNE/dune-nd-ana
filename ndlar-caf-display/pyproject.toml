@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ndlar-caf-display"
-version = "0.1.3"
+version = "0.1.5"
 authors = [
     { name = "Linda Cremonesi", email = "l.cremonesi@imperial.ac.uk" },
     { name = "Charlotte Knight", email = "charlotte.knight@imperial.ac.uk" },
@@ -18,6 +18,8 @@ dependencies = [
     "uproot",
     "awkward"
 ]
+license = "Apache-2.0"
+license-files = ["LICENCE"]
 
 [project.scripts]
 ndlar-caf-display = "ndlar_caf_display:cli.main"
