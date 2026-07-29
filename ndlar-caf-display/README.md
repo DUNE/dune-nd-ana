@@ -1,18 +1,23 @@
-# DUNE ndlar-caf-display Event Display
+# DUNE ndlar-caf-display
 
-This repository provides an interactive 2D/3D event display for interactions within the **DUNE Near Detector Liquid Argon (ND-LAr)** Common Analysis Format (CAF) flat trees. It draws straight lines between the start and end positions of particle hypotheses, color-coded by particle type and overlaid with truth-level information for validation.
+This package provides an interactive 2D/3D event display for interactions within the **DUNE Near Detector Liquid Argon (ND-LAr)** using Common Analysis Format (CAF) flat trees as input. It draws straight lines between the start and end positions of particle hypotheses, color-coded by particle type and overlaid with truth-level information for validation.
 
-The heavy lifting (data parsing, truth-matching, and 3D projection rendering) is managed by the external helper module `ndlar_caf_display_helpers.py`.
+![Example of an event display](example_display.png)
 
----
-
-## Quick Start
-This code is now installable via pip:
+The package can be installed with pip:
 ```
-pip install --extra-index-url https://test.pypi.org/simple/ ndlar-caf-display
+pip install ndlar-caf-display
 ```
-and you can make event displays with the `ndlar-caf-display` executable.
 
+The primary way to generate an event display is with the `ndlar-caf-display` command which is a CLI that is included in the pip installation. Alternatively, you can import the `ndlar_caf_display.helpers` module in Python. 
+
+## Usage via `ndlar-caf-display` CLI
+
+The basic usage of the CLI is:
+```
+ndlar-caf-display /path/to/CAF.flat.root
+```
+which brings up an interactive window for the event display, and saves a png of the event display to the default `--save-dir` which is `plots/`. The full usage can be seen with `ndlar-caf-display --help`:
 ```
 [chknight@dunegpvm02 test]$ ndlar-caf-display --help
 usage: ndlar-caf-display [-h] [--spill SPILL] [--ixn IXN [IXN ...]] [--reco {dlp,pandora}] [--save-dir SAVE_DIR]
@@ -32,170 +37,16 @@ optional arguments:
   --save-dir SAVE_DIR   Directory to save plots (default: 'plots').
   --skip-truth          Whether to skip plotting truth information (default: False).
   --apply-fv-cut        Whether to apply the fiducial volume cut (default: False).
-  --batch, -b           Whether to run in batch mode where the plots are not displayed interactively (default:
-                        False).
+  --batch, -b           Whether to run in batch mode where the plots are not displayed interactively (default: False).
 ```
 
-The rest of the documentation is left over from before the code was packaged up but may still be helpful to understand what the different options mean, or if you'd like to understand how the code works a bit more.
-
----
-
-## Prerequisites
-
-To use this event display, you will need the following Python modules:
-
-- `uproot`
-- `awkward`
-- `matplotlib`
-- `numpy`
-
-You will also need one or more **FLAT ND LAr CAFs** (root files).
-
----
-
-## 1. Loading and Initialising Data
-
-In the first cells, initialise your environment and point the script to your `.root` file:
-
-```python
-%matplotlib inline
-import matplotlib.pyplot as plt
-import sys
-
-# Change below to match your path to ndlar-caf-display
-sys.path.append('/path/to/ndlar-caf-display/')
-
-# Import everything explicitly from your helper file
-from ndlar_caf_display_helpers import load_interaction_spills, plot_interactions
+If you are running `ndlar-caf-display` on a machine with `/pnfs/dune/persistent` available, e.g. the DUNE gpvm's, you can get started quickly with:
+```
+ndlar-caf-display -b /pnfs/dune/persistent/physicsgroups/dunendsim/abooth/nd-production/MicroProdN4p1/run-cafmaker/MicroProdN4p1_NDComplex_FHC.caf.full.spineonly/CAF.flat/0002000/0002400/MicroProdN4p1_NDComplex_FHC.caf.full.spineonly.0002459.CAF.flat.root
 ```
 
-Then specify your data file path:
+## Usage via `ndlar_caf_display.helpers`
 
-```python
-filedir = '/path/to/CAF/files/'
-filename = "MicroProdN4p1_NDComplex_FHC.caf.full.spineonly.0002460.CAF.flat.root"
-filepath = filedir + '/' + filename
-```
+You may want to interact directly with functions written in the `ndlar_caf_display.helpers` module, for example if you wanted to write script that produced a bunch of event display for later viewing. 
 
----
-
-## 2. Choose Your Reconstruction
-
-The event display will plot straight lines between the start and end position of particle hypotheses. The code was written to accept both **DLP** and **Pandora** reconstruction (although at the moment the DLP option is more mature).
-
-```python
-reco_type = "dlp"
-# reco_type = "pandora"
-
-spills = load_interaction_spills(filepath, reco=reco_type)
-```
-
----
-
-## 3. Visualisation Modes 🎨
-
-The core visualisation function accepts three distinct configuration modes via the `mode` parameter. Adjust it depending on how much data you want to audit at once.
-
-### Function Parameters Reference 🎛️
-
-`plot_interactions` is configured using the following parameters:
-
-- **`spills`**: The in-memory data object containing the loaded spills extracted from the flat CAF.
-- **`spill_index`**: The specific spill or beam slice number you want to view (defaults to `0` for the first spill in the file).
-- **`mode`**: Controls how many interactions are plotted at once. Accepted values are:
-  - `"single"`: Displays exactly one interaction specified by the `ixn` parameter.
-  - `"list"`: Displays only the specific interaction indices passed to `ixn_list`.
-  - `"all"`: Displays every single reconstructed interaction found within that spill.
-- **`ixn`**: The specific interaction index number to display when running in `mode="single"`.
-- **`ixn_list`**: A Python list of interaction index numbers (e.g., `[18, 19, 20]`) to plot simultaneously when running in `mode="list"`.
-- **`reco`**: Specifies which reconstruction algorithm data to look up. Set to `"dlp"` for Deep Learning Physics branches or `"pandora"` for Pandora tracking branches.
-- **`plot_truth`**: Chooses whether or not to plot truth information (only possible when plotting less than 20 interactions, otherwise it will turn itself to False). Default is `True`.
-- **`apply_fv_cut`**: Chooses whether or not to apply a fiducial volume cut (25 cm from all sides of active volume). Default is `False`.
-- **`save_dir`**: If defined, saves the event displays into an appropriate directory. Default is `None`.
-
----
-
-## Example Mode A: Single Event
-
-Zooms in on exactly one interaction index to isolate its trajectories from background noise.
-
-```python
-plot_interactions(spills, spill_index=0, mode="single", ixn=45, reco=reco_type, plot_truth=True, save_dir='plots')
-```
-
-**Output:**
-```
-Spill: 0 Interaction: 45 
- Reco: [1 μ⁻, 1 π⁺] (ov=0.95) 
- Truth: νμ CC QE [1 μ⁻, 1 p]
-Successfully saved display to: plots/spill_0_single_ixn45.png
-```
-
----
-
-## Example Mode B: Isolated Interaction List
-
-Focuses exclusively on an array of specific interaction indices. This is perfect for troubleshooting truth interactions that get broken up into multiple reco interactions.
-
-```python
-plot_interactions(
-    spills, 
-    spill_index=0, 
-    mode="list", 
-    ixn_list=[11, 13, 14],
-    reco=reco_type,
-    plot_truth=True,
-    save_dir='plots')
-```
-
-**Output:**
-```
-Spill: 0 Interaction: 11 
- Reco: [1 μ⁻, 1 p] (ov=0.99) 
- Truth: νμ CC COH [1 μ⁻, 1 π⁰, 2 p]
-Spill: 0 Interaction: 13 
- Reco: [no reco parts] (ov=0.45) 
- Truth: νμ CC DIS [1 μ⁻, 2 π⁰, 1 p]
-Spill: 0 Interaction: 14 
- Reco: [1 μ⁻] (ov=0.99) 
- Truth: νμ CC DIS [1 μ⁻, 1 π⁺, 6 n, 1 p]
-Successfully saved display to: plots/spill_0_list_ixn11.png
-```
-
----
-
-## Example Mode C: Complete Spill Overview
-
-Renders every single reconstructed interaction found inside the given spill slice. **Note:** For dense spills, this can look visually cluttered.
-
-```python
-plot_interactions(spills, spill_index=0, mode="all", reco=reco_type, plot_truth=False, save_dir='plots')
-```
-
-**Output:**
-```
-NB: More than 20 interactions, switching plot_truth flag to FALSE
-Successfully saved display to: plots/spill_0_all_ixn0.png
-```
-
----
-
-## Usage Tips
-
-- Use **Mode A (Single)** for detailed debugging of individual interactions
-- Use **Mode B (List)** to compare related interactions side-by-side
-- Use **Mode C (All)** for a birds-eye view of all reconstructed activity in a spill
-- The overlap (ov) parameter indicates the fraction of truth energy matched to reconstruction
-- Debug information includes counts of invalid matches and potential rock muons
-
----
-
-## Related Files
-
-- `ndlar_caf_display_helpers.py` - Core helper module with data parsing and rendering logic
-- `ndlar_caf_display_copyMe.ipynb` - Jupyter notebook template with interactive examples
-
----
-
-## Contact
-- Linda Cremonesi (l.cremonesi@imperial.ac.uk) - current lead author, maintener
+You can see examples of this in the `ndlar-caf-display` CLI source [code](https://github.com/DUNE/dune-nd-ana/blob/develop/ndlar-caf-display/src/ndlar_caf_display/cli.py), and in this [notebook](https://github.com/DUNE/dune-nd-ana/blob/develop/ndlar-caf-display/ndlar_caf_display-copyMe.ipynb).
