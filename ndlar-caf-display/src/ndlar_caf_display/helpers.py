@@ -269,7 +269,9 @@ def _add_legends(ax3d, legend_entries, legend_labels, plot_truth, reco, apply_fv
 # ====================================================================
 # Main High-Level Visualiser Function
 # ====================================================================
-def plot_interactions(spills, spill_index=0, mode="all", ixn=None, ixn_list=None, reco="dlp", plot_truth=True, apply_fv_cut=False, save_dir=None):
+def plot_interactions(spills, spill_index=0, mode="all", ixn=None, ixn_list=None, reco="dlp", 
+                      plot_truth=True, apply_fv_cut=False, save_dir=None, 
+                      plot_only_primary_reco=False, reco_energy_threshold=0):
     reco = reco.lower()
     ev = spills[spill_index]
 
@@ -360,8 +362,10 @@ def plot_interactions(spills, spill_index=0, mode="all", ixn=None, ixn_list=None
     
         # Reconstructed Particles Loop
         for g in range(start_idx, end_idx):
-            _plot_reco_particle(ax3d, ax_xz, ax_xy, ax_yz, g, sx, sy, sz, ex, ey, ez, energy_arr, colour, rx[I], ry[I], rz[I])
-
+            if energy_arr[g] > reco_energy_threshold:
+                if (not plot_only_primary_reco) or (plot_only_primary_reco and reco_prims[g] == 1):
+                    _plot_reco_particle(ax3d, ax_xz, ax_xy, ax_yz, g, sx, sy, sz, ex, ey, ez, energy_arr, colour, rx[I], ry[I], rz[I])
+            
         # True Primary Lines
         if plot_truth and truth_interaction_index >= 0:
             _plot_true_primaries(ev, ax3d, ax_xz, ax_xy, ax_yz, p_start, p_end, colour, ev["rec.mc.nu.vtx.x"][truth_interaction_index], ev["rec.mc.nu.vtx.y"][truth_interaction_index], ev["rec.mc.nu.vtx.z"][truth_interaction_index])
