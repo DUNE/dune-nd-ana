@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ndlar-caf-display"
-version = "0.1.0"
+version = "0.2.0"
 authors = [
     { name = "Linda Cremonesi", email = "l.cremonesi@imperial.ac.uk" },
     { name = "Charlotte Knight", email = "charlotte.knight@imperial.ac.uk" },

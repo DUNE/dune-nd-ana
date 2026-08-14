@@ -20,6 +20,10 @@ def main():
                       help="Whether to apply the fiducial volume cut (default: False).")
   parser.add_argument("--batch", "-b", action="store_true", default=False,
                       help="Whether to run in batch mode where the plots are not displayed interactively (default: False).")
+  parser.add_argument("--only-primary-reco", action="store_true", default=False,
+                      help="Whether to plot only reconstructed primary particles (default: False).")
+  parser.add_argument("--reco-energy-threshold", type=float, default=0.0,
+                      help="Energy threshold for plotting reconstructed particles (default: 0.0 GeV).")
 
   args = parser.parse_args()
 
@@ -34,7 +38,9 @@ def main():
     "reco": args.reco,
     "save_dir": args.save_dir,
     "plot_truth": not args.skip_truth,
-    "apply_fv_cut": args.apply_fv_cut
+    "apply_fv_cut": args.apply_fv_cut,
+    "plot_only_primary_reco": args.only_primary_reco,
+    "reco_energy_threshold": args.reco_energy_threshold
   }
 
   # Plot the interactions
